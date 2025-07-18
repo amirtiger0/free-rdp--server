@@ -1,4 +1,4 @@
-name: Ubuntu RDP GPU via Ngrok
+name: Ubuntu RDP via VNC & Ngrok
 
 on: [workflow_dispatch]
 
@@ -9,20 +9,27 @@ jobs:
       contents: read
 
     steps:
-    - name: Setup Display and Install XFCE
+    - name: Install Desktop & VNC
       run: |
         sudo apt update
         sudo apt install xfce4 xfce4-goodies tightvncserver -y
-        mkdir -p $HOME/myvnc
-        echo -ne '\x36\x57\x4c\x77\x7e\x45\x70\x72' > $HOME/myvnc/passwd
-        chmod 600 $HOME/myvnc/passwd
+
+        # إنشاء مجلد .vnc
         mkdir -p ~/.vnc
+
+        # إنشاء كلمة مرور VNC (8 خانات مشفرة)
+        echo -ne '\x36\x57\x4c\x77\x7e\x45\x70\x72' > ~/.vnc/passwd
+        chmod 600 ~/.vnc/passwd
+
+        # إعداد ملف xstartup لبدء XFCE
         echo "#!/bin/bash
         startxfce4 &" > ~/.vnc/xstartup
         chmod +x ~/.vnc/xstartup
-        vncserver -PasswordFile $HOME/myvnc/passwd :1
 
-    - name: Install GPU Drivers & CUDA (Optional)
+        # بدء سيرفر VNC على :1
+        vncserver :1
+
+    - name: Install GPU Driver (اختياري)
       run: |
         sudo apt install -y nvidia-driver-470
         nvidia-smi || echo "No GPU available"
@@ -33,7 +40,7 @@ jobs:
         unzip ngrok-stable-linux-amd64.zip
         chmod +x ngrok
         ./ngrok authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
-        nohup ./ngrok tcp 5901 &
+        nohup ./ngrok tcp 5901 > ngrok.log &
 
     - name: Wait for Ngrok
       run: sleep 10
