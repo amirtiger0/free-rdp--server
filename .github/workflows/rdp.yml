@@ -1,4 +1,4 @@
-name: Ubuntu RDP via VNC & Ngrok
+name: Ubuntu RDP GPU via Ngrok
 
 on: [workflow_dispatch]
 
@@ -9,32 +9,27 @@ jobs:
       contents: read
 
     steps:
-    - name: Install Desktop & VNC
+    - name: Install Desktop and VNC
       run: |
         sudo apt update
-        sudo apt install xfce4 xfce4-goodies tightvncserver -y
+        sudo apt install -y xfce4 xfce4-goodies tightvncserver
 
-        # إنشاء مجلد .vnc
         mkdir -p ~/.vnc
-
-        # إنشاء كلمة مرور VNC (8 خانات مشفرة)
-        echo -ne '\x36\x57\x4c\x77\x7e\x45\x70\x72' > ~/.vnc/passwd
+        echo "password" | vncpasswd -f > ~/.vnc/passwd
         chmod 600 ~/.vnc/passwd
 
-        # إعداد ملف xstartup لبدء XFCE
         echo "#!/bin/bash
         startxfce4 &" > ~/.vnc/xstartup
         chmod +x ~/.vnc/xstartup
 
-        # بدء سيرفر VNC على :1
         vncserver :1
 
-    - name: Install GPU Driver (اختياري)
+    - name: Install GPU Drivers (Optional)
       run: |
         sudo apt install -y nvidia-driver-470
         nvidia-smi || echo "No GPU available"
 
-    - name: Download & Start Ngrok
+    - name: Install and Start Ngrok
       run: |
         wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-stable-linux-amd64.zip
         unzip ngrok-stable-linux-amd64.zip
@@ -45,7 +40,7 @@ jobs:
     - name: Wait for Ngrok
       run: sleep 10
 
-    - name: Show Ngrok Tunnel
+    - name: Show Ngrok Public URL
       run: |
         curl -s http://127.0.0.1:4040/api/tunnels > tunnels.json
-        cat tunnels.json | grep -Po '"public_url":"\K[^"]*'
+        grep -oP '"public_url":"tcp://\K[^"]+' tunnels.json
