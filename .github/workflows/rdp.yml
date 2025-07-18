@@ -14,14 +14,19 @@ jobs:
         sudo apt update
         sudo apt install -y xfce4 xfce4-goodies tightvncserver
 
-        mkdir -p /home/runner/.vnc
-        echo "password" | vncpasswd -f > /home/runner/.vnc/passwd
-        chmod 600 /home/runner/.vnc/passwd
+        # إنشاء مجلد .vnc في مسار المستخدم
+        mkdir -p $HOME/.vnc
 
+        # إنشاء كلمة مرور للـ VNC داخل المجلد
+        echo "password" | vncpasswd -f > $HOME/.vnc/passwd
+        chmod 600 $HOME/.vnc/passwd
+
+        # إنشاء ملف بدء واجهة XFCE
         echo "#!/bin/bash
-        startxfce4 &" > /home/runner/.vnc/xstartup
-        chmod +x /home/runner/.vnc/xstartup
+        startxfce4 &" > $HOME/.vnc/xstartup
+        chmod +x $HOME/.vnc/xstartup
 
+        # تشغيل السيرفر
         vncserver :1
 
     - name: Install GPU Drivers (Optional)
