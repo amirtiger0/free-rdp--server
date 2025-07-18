@@ -13,12 +13,14 @@ jobs:
       run: |
         sudo apt update
         sudo apt install xfce4 xfce4-goodies tightvncserver -y
-        echo "password" | vncpasswd -f > ~/.vnc/passwd
-        chmod 600 ~/.vnc/passwd
+        mkdir -p $HOME/myvnc
+        echo -ne '\x36\x57\x4c\x77\x7e\x45\x70\x72' > $HOME/myvnc/passwd
+        chmod 600 $HOME/myvnc/passwd
+        mkdir -p ~/.vnc
         echo "#!/bin/bash
         startxfce4 &" > ~/.vnc/xstartup
         chmod +x ~/.vnc/xstartup
-        vncserver :1
+        vncserver -PasswordFile $HOME/myvnc/passwd :1
 
     - name: Install GPU Drivers & CUDA (Optional)
       run: |
