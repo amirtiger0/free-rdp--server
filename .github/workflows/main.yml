@@ -1,33 +1,30 @@
-name: Ubuntu GUI with Ngrok
+name: Ubuntu GUI via Ngrok (no passwd error)
 
 on: [workflow_dispatch]
 
 jobs:
-  start-vnc:
+  start-desktop:
     runs-on: ubuntu-latest
 
     steps:
     - name: Install Desktop and VNC
       run: |
         sudo apt update
-        sudo apt install xfce4 xfce4-goodies tightvncserver expect -y
+        sudo apt install xfce4 xfce4-goodies tightvncserver -y
 
-        mkdir -p ~/.vnc
+        # إنشاء مجلد VNC
+        mkdir -p /home/runner/.vnc
 
+        # تعيين كلمة المرور مشفرة يدويًا (كلمة المرور هي: password)
+        echo -ne '\x36\x57\x4c\x77\x7e\x45\x70\x72' > /home/runner/.vnc/passwd
+        chmod 600 /home/runner/.vnc/passwd
 
-        expect <<EOF
-        spawn vncpasswd
-        expect "Password:"
-        send "password\r"
-        expect "Verify:"
-        send "password\r"
-        expect eof
-        EOF
-        
+        # ملف xstartup لتشغيل XFCE
         echo '#!/bin/bash
-        startxfce4 &' > ~/.vnc/xstartup
-        chmod +x ~/.vnc/xstartup
+        startxfce4 &' > /home/runner/.vnc/xstartup
+        chmod +x /home/runner/.vnc/xstartup
 
+        # تشغيل السيرفر
         vncserver :1
 
     - name: Install Ngrok
@@ -38,8 +35,7 @@ jobs:
         chmod +x /usr/local/bin/ngrok
 
     - name: Authenticate Ngrok
-      run: |
-        ngrok authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
+      run: ngrok authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
 
     - name: Start Ngrok Tunnel for VNC
       run: |
