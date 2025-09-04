@@ -1,0 +1,348 @@
+{% extends "base.html" %}
+
+{% block title %}إعدادات القلعة - {{ account.email }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-chess-rook me-2"></i>إعدادات القلعة</h2>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-right me-1"></i> العودة للرئيسية
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fas fa-user me-2"></i>الحساب: {{ account.email }}</h5>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-info">
+                <h5><i class="fas fa-info-circle me-2"></i>تعليمات:</h5>
+                <p class="mb-0">قم بتحديد المهام التي تريد تنفيذها ثم اضغط على زر الحفظ.</p>
+            </div>
+            
+            <form method="POST" action="{{ url_for('castle_settings', account_id=account.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="row">
+                    <!-- Castle Settings Section -->
+                    <div class="col-12 mb-4">
+                        <h5 class="border-bottom pb-2">
+                            <i class="fas fa-chess-rook me-2"></i>
+                            إعدادات القلعة الأساسية
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" 
+                                           id="ads" name="tasks" 
+                                           value="ads" 
+                                           {% if account.tasks and account.tasks.get('ads') %}checked{% endif %}>
+                                    <label class="form-check-label" for="ads">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-tv me-2"></i>مشاهدة الإعلانات
+                                        </h6>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" 
+                                           id="treasure_hunter" name="tasks" 
+                                           value="treasure_hunter" 
+                                           {% if account.tasks and account.tasks.get('treasure_hunter') %}checked{% endif %}>
+                                    <label class="form-check-label" for="treasure_hunter">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-gem me-2"></i>صائد الكنوز
+                                        </h6>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" 
+                                           id="vip_hunt" name="tasks" 
+                                           value="vip_hunt" 
+                                           {% if account.tasks and account.tasks.get('vip_hunt') %}checked{% endif %}>
+                                    <label class="form-check-label" for="vip_hunt">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-crown me-2"></i>صيد VIP
+                                        </h6>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" 
+                                           id="recruit_soldiers" name="tasks" 
+                                           value="recruit_soldiers" 
+                                           {% if account.tasks and account.tasks.get('recruit_soldiers') %}checked{% endif %}>
+                                    <label class="form-check-label" for="recruit_soldiers">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-users me-2"></i>تجنيد 550 جندي من كل نوع
+                                        </h6>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Free Wishes Section with Radio Buttons -->
+                    <div class="col-12 mb-4">
+                        <h5 class="border-bottom pb-2">
+                            <i class="fas fa-star me-2"></i>
+                            الأمنيات المجانية
+                        </h5>
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" 
+                                           id="wish_wood" name="free_wish" 
+                                           value="wood" 
+                                           {% if account.tasks and account.tasks.get('free_wish') == 'wood' %}checked{% endif %}>
+                                    <label class="form-check-label" for="wish_wood">
+                                        <i class="fas fa-tree me-1"></i>خشب
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" 
+                                           id="wish_wheat" name="free_wish" 
+                                           value="wheat" 
+                                           {% if account.tasks and account.tasks.get('free_wish') == 'wheat' %}checked{% endif %}>
+                                    <label class="form-check-label" for="wish_wheat">
+                                        <i class="fas fa-wheat-mee me-1"></i>قمح
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" 
+                                           id="wish_iron" name="free_wish" 
+                                           value="iron" 
+                                           {% if account.tasks and account.tasks.get('free_wish') == 'iron' %}checked{% endif %}>
+                                    <label class="form-check-label" for="wish_iron">
+                                        <i class="fas fa-cube me-1"></i>حديد
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Daily Rewards Section -->
+                    <div class="col-12 mb-4">
+                        <h5 class="border-bottom pb-2">
+                            <i class="fas fa-gift me-2"></i>
+                            المكافآت اليومية
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" 
+                                           id="champion_platform" name="tasks" 
+                                           value="champion_platform" 
+                                           {% if account.tasks and account.tasks.get('champion_platform') %}checked{% endif %}>
+                                    <label class="form-check-label" for="champion_platform">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-trophy me-2"></i>سحب منصات الأبطال
+                                        </h6>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" 
+                                           id="daily_login" name="tasks" 
+                                           value="daily_login" 
+                                           {% if account.tasks and account.tasks.get('daily_login') %}checked{% endif %}>
+                                    <label class="form-check-label" for="daily_login">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-calendar-check me-2"></i>التسجيل اليومي
+                                        </h6>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VIP Boxes Section -->
+                    <div class="col-12 mb-4">
+                        <h5 class="border-bottom pb-2">
+                            <i class="fas fa-crown me-2"></i>
+                            صناديق VIP
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" 
+                                           id="vip_box_old" name="tasks" 
+                                           value="vip_box_old" 
+                                           {% if account.tasks and account.tasks.get('vip_box_old') %}checked{% endif %}>
+                                    <label class="form-check-label" for="vip_box_old">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-box-open me-2"></i>استلام صندوق VIP قديم
+                                        </h6>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" 
+                                           id="vip_box_new" name="tasks" 
+                                           value="vip_box_new" 
+                                           {% if account.tasks and account.tasks.get('vip_box_new') %}checked{% endif %}>
+                                    <label class="form-check-label" for="vip_box_new">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-box me-2"></i>استلام صندوق VIP جديد
+                                        </h6>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Shop and Purchase Section -->
+                    <div class="col-12 mb-4">
+                        <h5 class="border-bottom pb-2">
+                            <i class="fas fa-shopping-cart me-2"></i>
+                            المتجر والشراء
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" 
+                                           id="shop_box" name="tasks" 
+                                           value="shop_box" 
+                                           {% if account.tasks and account.tasks.get('shop_box') %}checked{% endif %}>
+                                    <label class="form-check-label" for="shop_box">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-shopping-bag me-2"></i>استلام صندوق المتجر
+                                        </h6>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" 
+                                           id="daily_purchase_box" name="tasks" 
+                                           value="daily_purchase_box" 
+                                           {% if account.tasks and account.tasks.get('daily_purchase_box') %}checked{% endif %}>
+                                    <label class="form-check-label" for="daily_purchase_box">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-coins me-2"></i>استلام صندوق الشراء اليومي
+                                        </h6>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" 
+                                           id="weekly_cards" name="tasks" 
+                                           value="weekly_cards" 
+                                           {% if account.tasks and account.tasks.get('weekly_cards') %}checked{% endif %}>
+                                    <label class="form-check-label" for="weekly_cards">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-calendar-week me-2"></i>استلام بطاقات الأسبوعية
+                                        </h6>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alliance Section -->
+                    <div class="col-12 mb-4">
+                        <h5 class="border-bottom pb-2">
+                            <i class="fas fa-users me-2"></i>
+                            مهام الحلف
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" 
+                                           id="donate_pearls" name="tasks" 
+                                           value="donate_pearls" 
+                                           {% if account.tasks and account.tasks.get('donate_pearls') %}checked{% endif %}>
+                                    <label class="form-check-label" for="donate_pearls">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-gem me-2"></i>تبرع لؤلؤ
+                                        </h6>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" 
+                                           id="alliance_donation" name="tasks" 
+                                           value="alliance_donation" 
+                                           {% if account.tasks and account.tasks.get('alliance_donation') %}checked{% endif %}>
+                                    <label class="form-check-label" for="alliance_donation">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-hand-holding-heart me-2"></i>التبرع للحلف
+                                        </h6>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" 
+                                           id="alliance_mission" name="tasks" 
+                                           value="alliance_mission" 
+                                           {% if account.tasks and account.tasks.get('alliance_mission') %}checked{% endif %}>
+                                    <label class="form-check-label" for="alliance_mission">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-tasks me-2"></i>مهام الحلف
+                                        </h6>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Section -->
+                    <div class="col-12 mb-4">
+                        <h5 class="border-bottom pb-2">
+                            <i class="fas fa-share-alt me-2"></i>
+                            التواصل الاجتماعي
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" 
+                                           id="likes" name="tasks" 
+                                           value="likes" 
+                                           {% if account.tasks and account.tasks.get('likes') %}checked{% endif %}>
+                                    <label class="form-check-label" for="likes">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-thumbs-up me-2"></i>الإعجابات
+                                        </h6>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i> حفظ الإعدادات
+                    </button>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-1"></i> إلغاء
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add animation to checkboxes
+        const checkboxes = document.querySelectorAll('.form-check-input');
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                this.parentElement.classList.add('was-validated');
+            });
+        });
+    });
+</script>
+{% endblock %}

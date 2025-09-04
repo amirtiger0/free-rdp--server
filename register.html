@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}تسجيل حساب جديد{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white text-center">
+                <h4 class="mb-0">إنشاء حساب جديد</h4>
+            </div>
+            <div class="card-body">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <form method="POST" action="{{ url_for('register') }}" onsubmit="return validateForm()">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">اسم المستخدم</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            <input type="text" class="form-control" id="username" name="username" required 
+                                   minlength="3" maxlength="20" pattern="[A-Za-z0-9_]+" 
+                                   title="يجب أن يحتوي اسم المستخدم على أحرف إنجليزية وأرقام وشرطة سفلية فقط">
+                        </div>
+                        <div class="form-text">يجب أن يكون بين 3 و 20 حرفاً (أحرف إنجليزية، أرقام، _)</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label">كلمة المرور</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" class="form-control" id="password" name="password" required
+                                   minlength="6" maxlength="30">
+                        </div>
+                        <div class="form-text">يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل</div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="confirm_password" class="form-label">تأكيد كلمة المرور</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" class="form-control" id="confirm_password" required>
+                        </div>
+                        <div id="password_error" class="text-danger d-none">كلمات المرور غير متطابقة</div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-user-plus me-1"></i> تسجيل الحساب
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-3">
+                    <p class="mb-0">لديك حساب بالفعل؟ <a href="{{ url_for('login') }}">سجل الدخول</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+function validateForm() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm_password').value;
+    const passwordError = document.getElementById('password_error');
+    
+    if (password !== confirmPassword) {
+        passwordError.classList.remove('d-none');
+        return false;
+    }
+    passwordError.classList.add('d-none');
+    return true;
+}
+
+document.getElementById('confirm_password').addEventListener('input', function() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = this.value;
+    const passwordError = document.getElementById('password_error');
+    
+    if (password !== confirmPassword) {
+        passwordError.classList.remove('d-none');
+    } else {
+        passwordError.classList.add('d-none');
+    }
+});
+</script>
+{% endblock %}
+
+{% endblock %}

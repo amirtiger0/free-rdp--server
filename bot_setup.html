@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}إعداد البوت{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white text-center">
+                <h4 class="mb-0">إعدادات البوت</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h5>تعليمات هامة:</h5>
+                    <p class="mb-0">يرجى إدخال بيانات حسابك في لعبة نداء الفاتحين بدقة</p>
+                </div>
+                
+                <form method="POST" action="{{ url_for('bot_setup') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">البريد الإلكتروني</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                <input type="email" class="form-control" id="email" name="email" 
+                                       value="{{ email }}" required>
+                            </div>
+                            <div class="form-text">البريد الإلكتروني المستخدم في تسجيل الدخول للعبة</div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="password" class="form-label">كلمة المرور</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <input type="password" class="form-control" id="password" name="password" 
+                                       value="{{ password }}" required>
+                            </div>
+                            <div class="form-text">كلمة مرور حسابك في اللعبة</div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <label for="phone" class="form-label">رقم الهاتف</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                <input type="tel" class="form-control" id="phone" name="phone" 
+                                       value="{{ phone }}" pattern="[0-9]+" required>
+                            </div>
+                            <div class="form-text">رقم الهاتف المسجل في اللعبة</div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <label for="igg_id" class="form-label">معرف IGG</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                <input type="text" class="form-control" id="igg_id" name="igg_id" 
+                                       value="{{ igg_id }}" required>
+                            </div>
+                            <div class="form-text">يمكنك العثور عليه في ملفك الشخصي باللعبة</div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <label for="subscription_days" class="form-label">مدة الاشتراك</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                                <select class="form-select" id="subscription_days" name="subscription_days" required>
+                                    <option value="30">شهر واحد - 250 ج</option>
+                                    <option value="60">شهرين - 450 ج</option>
+                                    <option value="120">4 شهور - 850 ج</option>
+                                </select>
+                            </div>
+                            <div class="form-text">سيتم حساب تاريخ الانتهاء تلقائياً</div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i> حفظ الإعدادات
+                        </button>
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-1"></i> إلغاء
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">كيفية العثور على معرف IGG</h5>
+            </div>
+            <div class="card-body">
+                <ol class="mb-0">
+                    <li>افتح لعبة نداء الفاتحين</li>
+                    <li>اضغط على صورتك الشخصية في أعلى اليسار</li>
+                    <li>ابحث عن "معرف اللاعب" أو "Player ID"</li>
+                    <li>انسخ الرقم الظاهر في الحقل أعلاه</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-text {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+.input-group-text {
+    min-width: 45px;
+    justify-content: center;
+}
+
+.btn {
+    min-width: 120px;
+}
+</style>
+{% endblock %}

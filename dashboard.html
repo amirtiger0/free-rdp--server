@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block title %}لوحة التحكم{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>لوحة التحكم</h2>
+        <a href="{{ url_for('bot_setup') }}" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i> إضافة حساب جديد
+        </a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="row">
+        {% if current_user.accounts %}
+            {% for account in current_user.accounts %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">حساب اللعبة #{{ loop.index }}</h5>
+                            <span class="badge bg-{{ 'success' if account.status == 'active' else 'secondary' }}">
+                                {{ 'نشط' if account.status == 'active' else 'غير نشط' }}
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <h6 class="text-muted mb-1">البريد الإلكتروني:</h6>
+                                <p class="mb-0">{{ account.email }}</p>
+                            </div>
+                            <div class="mb-3">
+                                <h6 class="text-muted mb-1">معرف IGG:</h6>
+                                <p class="mb-0">{{ account.igg_id }}</p>
+                            </div>
+                            <div class="mb-3">
+                                <h6 class="text-muted mb-1">رقم الهاتف:</h6>
+                                <p class="mb-0">{{ account.phone }}</p>
+                            </div>
+                            <div class="mb-3">
+                                <h6 class="text-muted mb-1">حالة الاشتراك:</h6>
+                                {% set subscription_end = account.get('subscription_end') %}
+                                {% if subscription_end %}
+                                    {% set end_date = subscription_end|to_datetime %}
+                                    {% if end_date %}
+                                        {% set days_remaining = (end_date - now).days %}
+                                        <p class="mb-0">
+                                            <span class="badge bg-{{ 'success' if days_remaining > 0 else 'danger' }}">
+                                                {{ 'ينتهي في ' + end_date.strftime('%Y-%m-%d') }}
+                                                ({{ days_remaining }} يوم متبقي)
+                                            </span>
+                                        </p>
+                                    {% else %}
+                                        <p class="mb-0"><span class="badge bg-warning">تاريخ انتهاء غير صالح</span></p>
+                                    {% endif %}
+                                {% else %}
+                                    <p class="mb-0"><span class="badge bg-secondary">غير محدد</span></p>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <h6 class="text-muted mb-1">تاريخ الإضافة:</h6>
+                                <p class="mb-0">{{ account.created_at|datetimeformat('%Y-%m-%d %H:%M') }}</p>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a href="{{ url_for('daily_tasks', account_id=account.id) }}" class="btn btn-primary me-md-2">
+                                    <i class="fas fa-tasks me-1"></i> المهام اليومية
+                                </a>
+                                <a href="{{ url_for('castle_settings', account_id=account.id) }}" class="btn btn-info text-white me-md-2">
+                                    <i class="fas fa-chess-rook me-1"></i> إعدادات القلعة
+                                </a>
+                                <button type="button" class="btn btn-warning me-md-2" data-bs-toggle="modal" data-bs-target="#editAccountModal{{ loop.index }}">
+                                    <i class="fas fa-edit me-1"></i> تعديل
+                                </button>
+                                <form action="{{ url_for('delete_account', account_id=account.id) }}" method="POST" class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذا الحساب؟')">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fas fa-trash me-1"></i> حذف
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Account Modal -->
+                <div class="modal fade" id="editAccountModal{{ loop.index }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">تعديل الحساب</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form action="{{ url_for('update_account', account_id=account.id) }}" method="POST">
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="email{{ loop.index }}" class="form-label">البريد الإلكتروني</label>
+                                        <input type="email" class="form-control" id="email{{ loop.index }}" 
+                                               name="email" value="{{ account.email }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="password{{ loop.index }}" class="form-label">كلمة المرور</label>
+                                        <input type="password" class="form-control" id="password{{ loop.index }}" 
+                                               name="password" placeholder="اتركها فارغة إذا لم ترغب في التغيير">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="phone{{ loop.index }}" class="form-label">رقم الهاتف</label>
+                                        <input type="tel" class="form-control" id="phone{{ loop.index }}" 
+                                               name="phone" value="{{ account.phone }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="igg_id{{ loop.index }}" class="form-label">معرف IGG</label>
+                                        <input type="text" class="form-control" id="igg_id{{ loop.index }}" 
+                                               name="igg_id" value="{{ account.igg_id }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="status{{ loop.index }}" class="form-label">الحالة</label>
+                                        <select class="form-select" id="status{{ loop.index }}" name="status">
+                                            <option value="active" {% if account.status == 'active' %}selected{% endif %}>نشط</option>
+                                            <option value="inactive" {% if account.status == 'inactive' %}selected{% endif %}>غير نشط</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                                    <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <div>
+                            <h5 class="mb-1">لا توجد حسابات مضافة</h5>
+                            <p class="mb-0">انقر على زر "إضافة حساب جديد" لإضافة حسابك الأول</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Add confirmation before deleting an account
+function confirmDelete(accountId) {
+    if (confirm('هل أنت متأكد من حذف هذا الحساب؟')) {
+        document.getElementById('deleteForm' + accountId).submit();
+    }
+}
+</script>
+{% endblock %}

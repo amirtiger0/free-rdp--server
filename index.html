@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}الرئيسية{% endblock %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="display-4">مرحباً بك في بلاك تايجر</h1>
+    <p class="lead">أقوى بوتات لعبه الفاتحون العصر الذهبي</p>
+    
+    {% if not current_user.is_authenticated %}
+        <div class="mt-4">
+            <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg mx-2">تسجيل حساب جديد</a>
+            <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg mx-2">تسجيل الدخول</a>
+        </div>
+    {% endif %}
+</div>
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h4 class="mb-0">ما هو بوت بلاك تايجر؟</h4>
+            </div>
+            <div class="card-body">
+                <p class="lead">بوت بلاك تايجر هو الحل الأمثل لمحبي لعبة الفاتحون العصر الذهبي. حيث يوفر لك ميزات متقدمة تجعل تجربة اللعب أسهل وأكثر متعة.</p>
+                
+                <h5 class="mt-4">المميزات الرئيسية:</h5>
+                <ul class="list-group list-group-flush mb-4">
+                    <li class="list-group-item">إدارة متكاملة للموارد والجنود</li>
+                    <li class="list-group-item">شحن حزم ودنيانير </li>
+                    <li class="list-group-item">إدارة فعالة للقلعة </li>
+                    <li class="list-group-item">قادر على لعب فيلق الظلام</li>
+                    <li class="list-group-item">قادر على قتل المتمرد المفقود ببطل واحد</li>
+                    <li class="list-group-item">إدارة تلقائية لأكثر من 11 حدث</li>
+                </ul>
+                
+                <div class="alert alert-info">
+                    <h5>للتواصل:</h5>
+                    <p class="mb-1">واتساب: 01068181699</p>
+                </div>
+                
+                {% if current_user.is_authenticated %}
+                    <div class="text-center mt-4">
+                        <a href="{{ url_for('bot_setup') }}" class="btn btn-primary btn-lg">ابدأ بتركيب البوت</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-dark text-white">
+                <h5>سهولة الاستخدام</h5>
+            </div>
+            <div class="card-body">
+                <p>واجهة سهلة وبسيطة تتيح لك التحكم الكامل في البوت بضغطة زر واحدة.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-dark text-white">
+                <h5>حماية وأمان</h5>
+            </div>
+            <div class="card-body">
+                <p>نضمن لك الحماية الكاملة لحسابك مع تشفير متقدم لبياناتك.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-dark text-white">
+                <h5>دعم فني</h5>
+            </div>
+            <div class="card-body">
+                <p>فريق دعم فني متاح على مدار الساعة لمساعدتك في أي استفسار.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{
+  "amirshohdy2@gmail.com": {
+    "password": "scrypt:32768:8:1$Vz0p0j22JZjPlnWf$c5c6e9369613ef98d9eb08374b6194c70711405b3e15542abc8366a277e3c787b6a24c512fd8eda1b2bb9701367a6141400e450f2632da5cc0cffd03a06f2032",
+    "email": "",
+    "igg_id": "",
+    "accounts": [
+      {
+        "id": "87bce0c0-ac98-4a7f-a7cc-5d3d058253d0",
+        "email": "amirshohdy2@gmail.com",
+        "password": "maro22maro",
+        "phone": "01068181699",
+        "igg_id": "212152",
+        "status": "active",
+        "created_at": "2025-09-04T05:44:02.647232",
+        "subscription_start": "2025-09-04T05:44:02.647235",
+        "subscription_end": "2025-10-04T05:44:02.647197",
+        "subscription_days": 30,
+        "call_formation": {
+          "avoid_above_30": true,
+          "buildings": [],
+          "empty_spaces": 20
+        }
+      }
+    ]
+  },
+  "AMIR": {
+    "password": "scrypt:32768:8:1$by5qTesVPmR63nrN$2cad3aeb4da4e9980179e580d35c5afba3c1377bc6ba22113975884322be9a0f5f1fea0ea575edb2a40122087351fad76a206c51c6192a425f37af734b622803",
+    "email": "maro20008@outlook.com",
+    "igg_id": "12345474687",
+    "tasks": {
+      "30": true,
+      "70": true,
+      "120": true,
+      "180": true,
+      "260": true,
+      "340": true,
+      "420": true,
+      "500": true
+    },
+    "accounts": [
+      {
+        "id": "ecf2432f-cc0f-44a6-8bbf-107ab8e1835b",
+        "email": "amirshohdy2@gmail.com",
+        "password": "maro22maro",
+        "phone": "01068181699",
+        "igg_id": "212152",
+        "status": "active",
+        "created_at": "2025-09-04T04:35:23.644010",
+        "tasks": {
+          "30": false,
+          "70": false,
+          "120": false,
+          "180": true,
+          "260": false,
+          "340": false,
+          "420": true,
+          "500": false
+        },
+        "updated_at": "2025-09-04T04:40:07.631444"
+      },
+      {
+        "id": "1021bfc6-2e8a-4e0f-a91e-cebf688e735c",
+        "email": "amirshohdy3@gmail.com",
+        "password": "maro22maro",
+        "phone": "01006537665",
+        "igg_id": "12345474687",
+        "status": "active",
+        "created_at": "2025-09-04T04:43:00.486481",
+        "subscription_start": "2025-09-04T04:43:00.486487",
+        "subscription_end": "2025-10-04T04:43:00.486424",
+        "subscription_days": 30
+      }
+    ]
+  },
+  "AMIR_2": {
+    "password": "pbkdf2:sha256:260000$6SyqXKjFk90EXjrl$2c70c0799fa5da10b8ba8856afeb94a94353ed7bc10bd824418011d21015274c",
+    "accounts": []
+  }
+}
